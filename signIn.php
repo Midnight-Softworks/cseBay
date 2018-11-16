@@ -10,7 +10,7 @@ session_start();?>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Log in to Website</title>
+        <title>Log in to cseBay</title>
         <style>
             input {
                 margin-bottom: 0.5em;
@@ -52,7 +52,7 @@ session_start();?>
         }
         ?>
         <h1>Welcome to <span style="font-style:italic; font-weight:bold; color: maroon">
-                Great Web Application</span>!</h1>
+                cseBay</span>!</h1>
 
         <p style="color: red">
         <?php echo $credentialError; ?>
