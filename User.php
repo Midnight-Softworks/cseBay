@@ -7,6 +7,7 @@
      */
 
     //Whoever did the UML diagrams, you need a strong talking to.
+    //Camelcase OR underscores, for the love of sweet baby jesus, not both.
     class User
     {
         private $username = "";
@@ -17,7 +18,7 @@
         }
 
         //Returns true if the user is an administrator. False otherwise
-        function isAdmin()
+        function IsAdmin()
         {
             include 'login.php';
             global $hn, $pw, $un, $db;
@@ -51,7 +52,7 @@
             return false;
         }
 
-        function isUserAvailable()
+        function isUser_available()
         {
             include 'login.php';
             global $hn, $pw, $un, $db;
@@ -74,7 +75,7 @@
             $salt1 = "Salt Lake City Utah, 18475%@)";
             $salt2 = "7898uhakjhhv^!%@*HHO&*H&*";
             $token = hash('ripemd256', "$salt1$password$salt2");
-            if ($this->isUserAvailable()) {
+            if ($this->isUser_available()) {
                 include 'login.php';
                 global $hn, $pw, $un, $db;
                 $conn = mysqli_connect($hn, $un, $pw, $db);
@@ -93,9 +94,9 @@
         }
 
         //jesus CHRIST can we please stick to camelcase or underscores, using both is hurting my brain
-        function registerEmail($email)
+        function Register_email($email)
         {
-            if (!checkEmail($email)) return false;
+            if (!check_Email($email)) return false;
             include 'login.php';
             global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
@@ -110,7 +111,7 @@
             return true;
         }
 
-        function checkEmail($email)
+        function check_Email($email)
         {
             $emailRegEx = '/^[a-zA-Z0-9]+\@[a-zA-Z0-9]+\.[a-zA-Z]+$/';
             if (!preg_match($emailRegEx, $email)) return false;
@@ -133,7 +134,7 @@
         }
 
         //Think this should be called set password, but that's not what the design doc says
-        function changePassword($password)
+        function Register_password($password)
         {
             $salt1 = "Salt Lake City Utah, 18475%@)";
             $salt2 = "7898uhakjhhv^!%@*HHO&*H&*";
@@ -156,6 +157,28 @@
         }
 
         //Can we sit down and discuss our design doc? Classes should be nouns, not verbs.
-        //A lot of these "classes" should be functions in this class.
+        //A lot of these "classes" should be functions in this class. And the inconsistent naming
+        //is driving me bananas.
+        function login($password)
+        {
+            $salt1 = "Salt Lake City Utah, 18475%@)";
+            $salt2 = "7898uhakjhhv^!%@*HHO&*H&*";
+            $token = hash('ripemd256', "$salt1$password$salt2");
 
+            include 'login.php';
+            global $hn, $pw, $un, $db;
+            $conn = mysqli_connect($hn, $un, $pw, $db);
+
+            //Got an error? Scream it out
+            if (mysqli_connect_errno()) {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+
+            $result = mysqli_query($conn, "SELECT password FROM cseBay_Users WHERE userName = '$this->username'");
+            $row = mysqli_fetch_assoc($result);
+            if ($row['password'] != $password) echo "Password was wrong, boss: " . mysqli_error($conn);
+            else return true;
+
+            return false;
+        }
     }
