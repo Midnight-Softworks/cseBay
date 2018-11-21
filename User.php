@@ -181,4 +181,22 @@
 
             return false;
         }
+
+        function setSession()
+        {
+            session_start();
+
+            if(isset($_SESSION["type"])) {
+                if ($_SESSION["type"] == "admin") {
+                    header('Location: admin_page.php');
+                    exit();
+                } else {
+                    header('Location: user_page.php');
+                    exit();
+                }
+            }
+        }
+
+        
+
     }
