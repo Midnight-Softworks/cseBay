@@ -19,30 +19,28 @@
  */
 
 // DB table to use
-$table = '((gamesdb.game LEFT JOIN gamesdb.has_tag ON game.GameID = has_tag.Game_ID) LEFT JOIN gamesdb.tag ON has_tag.Tag_ID = tag.TagID)';
+$table = 'cseBay_Listings';
 
 // Table's primary key
-$primaryKey = 'GameID';
+$primaryKey = 'listingID';
 
 // Array of database columns which should be read and sent back to DataTables.
 // The `db` parameter represents the column name in the database, while the `dt`
 // parameter represents the DataTables column identifier. In this case simple
 // indexes
 $columns = array(
-    array( 'db' => 'Game_Name', 'dt' => 0 ),
-    array( 'db' => 'Console',  'dt' => 1 ),
-    array( 'db' => 'Players',   'dt' => 2 ),
-    array( 'db' => 'GameID', 'dt' => 3),
-    array( 'db' => 'Tag_Name', 'dt' => 5)
+    array( 'db' => 'itemName', 'dt' => 0 ),
+    array( 'db' => 'listingID', 'dt' => 1)
+
 
 
 );
 
 // SQL server connection information
 $sql_details = array(
-    'user' => 'gameDbBot',
-    'pass' => 'I!n2V#',
-    'db'   => 'gamesdb',
+    'user' => 'sfs111',
+    'pass' => 'HVmZz09bl_FkQ_uv',
+    'db'   => 'sfs111',
     'host' => 'localhost'
 );
 
@@ -57,35 +55,5 @@ require( 'ssp.class.php' );
 
 $result =  SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns);
 $out = $result;
-$out['data'] = array();
-$distinctCount = 0;
-$seen = [];
-$tagCount = 0;
-foreach($result['data'] as $data){
-    if(!in_array($data['3'], $seen)){
-        $seen[] = $data['3'];
-        $out['data'][] = $data;
-        $out['data'][count($seen) - 1]['4'] = "";
-        $out['data'][count($seen) - 1]['5'] = "";
-        $tagCount = 0;
-        $distinctCount++;
-    }
-    if($tagCount < 3) {
-        if(!$tagCount == 0) {
-            $out['data'][count($seen) - 1]['4'] .= ", " . $data['5'];
-        }
-        else{
-            $out['data'][count($seen) - 1]['4'] .= $data['5'];
-        }
 
-    }
-    if(!$tagCount == 0) {
-        $out['data'][count($seen) - 1]['5'] .= ", " . $data['5'];
-    }
-    else{
-        $out['data'][count($seen) - 1]['5'] .= $data['5'];
-    }
-    $tagCount++;
-    if($distinctCount > 10) break;
-}
 echo json_encode($out);

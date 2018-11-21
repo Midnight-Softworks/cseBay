@@ -16,7 +16,7 @@ session_start();
 
 </head>
 <body>
-<?php include "Inventory/header.php"?>
+<?php include "header.php"?>
 
 <?php
 if (isset($_POST['gamename'])){

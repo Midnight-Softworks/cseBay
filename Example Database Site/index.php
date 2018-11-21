@@ -18,7 +18,7 @@ session_start();
 </head>
 
 <body>
-<?php include 'Inventory/header.php' ?>
+<?php include 'header.php' ?>
 
 
 
@@ -27,11 +27,7 @@ session_start();
         <thead>
         <tr>
             <th>Name</th>
-            <th>Console</th>
-            <th>Players</th>
             <th>ID</th>
-            <th>Tags</th>
-            <th>AllTags</th>
         </tr>
         </thead>
 
@@ -53,15 +49,8 @@ session_start();
 
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 "order": [[0, "asc"]],
-                "columnDefs": [{"className": "dt-center", "targets": "_all"},
-                    {"targets": 3,
-                        "visible": false,
-                        "searchable": false
-                    },
-                    {"targets": 5,
-                        "visible": false},
-                    {"targets": 4,
-                        "searchable": false}]
+                "columnDefs": {"className": "dt-center", "targets": "_all"}
+
             } );
             table
                 .on( 'select', function ( e, dt, type, indexes ) {
