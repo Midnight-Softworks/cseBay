@@ -25,7 +25,6 @@ session_start();?>
         //If submit is not set, the form hasn't been filled yet. Default to empty fields and no errors
         if (isset($_POST['submit'])){
 
-
             //For the following, set the entered values if they exist. Otherwise, default to blank
             if (isset($_POST['username']))$name = $_POST['username'];
             else $name = "";
@@ -33,9 +32,8 @@ session_start();?>
             else $password = "";
 
             $newUser = new User($name);
-            $newUser->isAdmin();
-
-
+            if($newUser->isAdmin()) $_SESSION['type'] = "admin";
+            else $_SESSION['type'] = "user";
 
         }
 
@@ -43,7 +41,6 @@ session_start();?>
         else{
             $name = "";
             $password = "";
-
             $credentialError = "";
         }
         if(isset($_SESSION['type'])){

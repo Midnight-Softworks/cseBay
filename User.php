@@ -158,4 +158,36 @@
         //Can we sit down and discuss our design doc? Classes should be nouns, not verbs.
         //A lot of these "classes" should be functions in this class.
 
+
+        function login($password)
+        {
+            $salt1 = "Salt Lake City Utah, 18475%@)";
+            $salt2 = "7898uhakjhhv^!%@*HHO&*H&*";
+            $token = hash('ripemd256', "$salt1$password$salt2");
+            include 'login.php';
+            global $hn, $pw, $un, $db;
+            $conn = mysqli_connect($hn, $un, $pw, $db);
+            //Got an error? Scream it out
+            if (mysqli_connect_errno()) {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+            $result = mysqli_query($conn, "SELECT password FROM cseBay_Users WHERE userName = '$this->username'");
+            $row = mysqli_fetch_assoc($result);
+            if ($row['password'] != $password) echo "Password was wrong, boss: " . mysqli_error($conn);
+            else return true;
+            return false;
+        }
+        function setSession()
+        {
+            session_start();
+            if(isset($_SESSION["type"])) {
+                if ($_SESSION["type"] == "admin") {
+                    header('Location: admin_page.php');
+                    exit();
+                } else {
+                    header('Location: user_page.php');
+                    exit();
+                }
+            }
+        }
     }
