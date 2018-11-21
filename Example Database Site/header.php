@@ -5,7 +5,7 @@
 
 
 		<ul class="nav">
-			<li class="nav-item"><a class="nav-link" href="/" style="color:black">Home</a></li>
+			<li class="nav-item"><a class="nav-link" href="http://pluto.cse.msstate.edu/~sfs111/gameDB/index.php" style="color:black">Home</a></li>
 			<li class="nav-item"><a class="nav-link" href="add_game.php" style="color:black">Add a game</a></li>
 		</ul>
 
