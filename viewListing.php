@@ -20,11 +20,18 @@
 <?php include "header.php"?>
 
 <?php
+    include 'User.php';
+    if (isset($_GET['bid']) && isset($_GET['listingID'])){
+        $biddingUser = new User($_SESSION['username']);
+        if ($biddingUser->bid($_GET['listingID'], $_GET['bid'])) echo "<script>alert('Bid placed successfully');</script>";
+        else echo "<script>alert('Please bid more than the current bid');</script>";
+        header("index.php");
+    }
     include 'login.php';
     $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$_GET['listingID'];
     $conn = mysqli_connect($hn, $un, $pw, $db);
     $result = mysqli_query($conn, $sql);
-    if(!$data) echo mysqli_error($conn);
+    if(!$result) echo mysqli_error($conn);
     $data = mysqli_fetch_row($result);
 
     echo "
@@ -38,5 +45,18 @@
     mysqli_close($conn);
 
     if ($_SESSION['username'] == $data[8] || $_SESSION['type'] == 'admin') echo "<a href=\"http://pluto.cse.msstate.edu/~sfs111/cseBay/editListing.php?&listingID=".$_GET['listingID']."\">Edit this listing</a>";
-?>
+    else if (isset($_SESSION['username'])){
+        echo "
+    <form action=\"viewListing.php\" method='get'>
+    Bid amount:
+        <input type=\"text\" name=\"bid\"  placeholder=\"" . ($data[9] + 1) . "\"><br>
+        <input type=\"hidden\" name=\"listingID\" value=\"".$_GET['listingID']."\">
+    
+         <input type=\"submit\" value=\"Bid\">
+    </form>
+    ";
+    }
+
+
+    ?>
 </body>
