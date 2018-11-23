@@ -42,7 +42,7 @@ echo "
     Buyout Price:
         <input type=\"text\" name=\"buyoutPrice\" placeholder=\"".$_POST['buyoutPrice']."\"><br>
     End Date:
-        <input type=\"text\" name=\"endDate\" placeholder=\"".$_POST['endDate']."\"><br>";
+        <input type=\"datetime-local\" name=\"endDate\" placeholder=\"".$_POST['endDate']."\"><br>";
     if ($_SESSION['type'] == 'admin') {
         echo "
     Creator:
@@ -72,7 +72,7 @@ else{
     Buyout Price:
     <input type=\"text\" name=\"buyoutPrice\"><br>
     End Date:
-    <input type=\"text\" name=\"endDate\"><br>";
+    <input type=\"datetime-local\" name=\"endDate\"><br>";
     if ($_SESSION['type'] == 'admin') {
         echo "
     Creator:

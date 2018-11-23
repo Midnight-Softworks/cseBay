@@ -21,64 +21,65 @@ session_start();
 
 <?php
     //This is all old code. Still needs to be updated
-if (isset($_GET['listingID'])){
-    include 'login.php';
-    $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$_GET['listingID'];
-    $conn = mysqli_connect($hn, $un, $pw, $db);
-    $result = mysqli_query($conn, $sql);
-    $description = "";
-    if(!$data) echo mysqli_error($conn);
-    $data = mysqli_fetch_row($result);
 
+if (isset($_SESSION['username'])) {
+    if (isset($_GET['listingID'])) {
+        include 'login.php';
+        $sql = "SELECT * FROM cseBay_Listings WHERE listingID = " . $_GET['listingID'];
+        $conn = mysqli_connect($hn, $un, $pw, $db);
+        $result = mysqli_query($conn, $sql);
+        $description = "";
+        if (!$data) echo mysqli_error($conn);
+        $data = mysqli_fetch_row($result);
 
-
-    echo "
+        if ($_SESSION['username'] == $data[8] || $_SESSION['type'] == 'admin') {
+            echo "
     <form action=\"editListing.php\" method='post'>
     Item Name:
-        <input type=\"text\" name=\"itemName\"  value=\"".$data[7]."\"><br>
+        <input type=\"text\" name=\"itemName\"  value=\"" . $data[7] . "\"><br>
     Item Description:
-        <input type=\"textarea\" name=\"itemDescription\" value=\"".$data[1]."\"><br>
+        <input type=\"textarea\" name=\"itemDescription\" value=\"" . $data[1] . "\"><br>
     Starting Bid:
-        <input type=\"text\" name=\"startingBid\" value=\"".$data[2]."\"><br>
+        <input type=\"text\" name=\"startingBid\" value=\"" . $data[2] . "\"><br>
     Buyout Price:
-        <input type=\"text\" name=\"buyoutPrice\" value=\"".$data[3]."\"><br>
+        <input type=\"text\" name=\"buyoutPrice\" value=\"" . $data[3] . "\"><br>
     End Date:
-        <input type=\"text\" name=\"endDate\" value=\"".$data[4]."\"><br>";
-    if ($_SESSION['type'] == 'admin') {
-        echo "
+        <input type=\"text\" name=\"endDate\" value=\"" . $data[4] . "\"><br>";
+            if ($_SESSION['type'] == 'admin') {
+                echo "
     Creator:
         <input type=\"text\" name=\"creator\" value=\"" . $data[8] . "\"><br> ";
-    }
-    else {
-        echo"
+            } else {
+                echo "
         <input type=\"hidden\" name=\"creator\" value=\"" . $data[8] . "\"><br> ";
-    }
-    echo"
+            }
+            echo "
         <br>
          <input type=\"submit\" value=\"Submit\">
     </form>
-    ";
+    ";}
 
+    else echo "You do not have permission to edit this listing.";
 
-    mysqli_close($conn);
+        mysqli_close($conn);
 
+    }
 
-}
-
-if (isset($_POST['listingID'])){
-    include 'login.php';
-    $sql = "UPDATE cseBay_Listings SET itemName = \"".$_POST['itemName']."\", itemDescription = \"".$_POST['itemDescription']."\", startingBid = ".$_POST['console'].", buyoutPrice = ".$_POST['buyoutPrice'].", endDate = \"".$_POST['endDate']."\", creator = \"".$_POST['creator']."\""." WHERE listingID = ".$_POST['listingID'];
-    $conn = mysqli_connect($hn, $un, $pw, $db);
-    mysqli_query($conn, $sql);
-    echo mysqli_error($conn);
-    if(!mysqli_error($conn)){
-        echo "<script>
+    if (isset($_POST['listingID'])) {
+        include 'login.php';
+        $sql = "UPDATE cseBay_Listings SET itemName = \"" . $_POST['itemName'] . "\", itemDescription = \"" . $_POST['itemDescription'] . "\", startingBid = " . $_POST['console'] . ", buyoutPrice = " . $_POST['buyoutPrice'] . ", endDate = \"" . $_POST['endDate'] . "\", creator = \"" . $_POST['creator'] . "\"" . " WHERE listingID = " . $_POST['listingID'];
+        $conn = mysqli_connect($hn, $un, $pw, $db);
+        mysqli_query($conn, $sql);
+        echo mysqli_error($conn);
+        if (!mysqli_error($conn)) {
+            echo "<script>
     alert(\"Listing updated successfully\");
    window.location = 'index.php';
 </script>";
+        }
+
     }
-
 }
-
+else echo "Only users may view this page. <br> Please, <a href = \"signUp.php\">create an account</a> or <a href = \"signIn.php\">sign in</a> to view this page.";
 ?>
 </body>
