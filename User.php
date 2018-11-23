@@ -190,4 +190,35 @@
                 }
             }
         }
+
+        function bid($listingID, $newBidAmount)
+        {
+            include 'login.php';
+            global $hn, $pw, $un, $db;
+            $conn = mysqli_connect($hn, $un, $pw, $db);
+
+            //Got an error? Scream it out
+            if (mysqli_connect_errno()) {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+
+            $result = mysqli_query($conn, "SELECT currentBid FROM cseBay_Listings WHERE listingID = '$listingID'");     //getting current bid
+            $row = mysqli_fetch_assoc($result);
+
+            //This may not work. Please test and make sure the return type is null on no matches
+            if ($row['currentBid'] < $newBidAmount){                                                                           //checking if current bid is higher than new Bid
+                $result = mysqli_query($conn, "UPDATE cseBay_Listing SET currentBid = '$newBidAmount' WHERE listingID = '$listingID'");         //if yes, updating new bid amount
+                $result = mysqli_query($conn, "UPDATE cseBay_Listing SET currentHighBidder = '$this->username' WHERE listingID = '$listingID'");    //if yes, updating new bidder
+
+                $result = mysqli_query($conn, "SELECT numberOfBids FROM cseBay_Listings WHERE listingID = '$listingID'");       //getting number of bids
+                $row = mysqli_fetch_assoc($result);
+                $newNumberOfBids = $row['numberOfBid'] + 1;                                                                            //adding  +1 to number of bids
+                $result = mysqli_query($conn, "UPDATE cseBay_Listing SET numberOfBids = $newNumberOfBids WHERE listingID = '$listingID'");      //updating number of bids
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }

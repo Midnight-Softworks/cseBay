@@ -14,7 +14,9 @@ $columns = array(
     array( 'db' => 'itemName', 'dt' => 0 ),
     array( 'db' => 'listingID', 'dt' => 1),
     array( 'db' => 'startingBid', 'dt' => 2),
-    array( 'db' => 'endDate', 'dt' => 3)
+    array( 'db' => 'currentBid', 'dt' => 3),
+    array( 'db' => 'numberOfBids', 'dt' => 4),
+    array( 'db' => 'endDate', 'dt' => 5)
 
 
 
@@ -30,6 +32,6 @@ $sql_details = array(
 
 require( 'ssp.class.php' );
 
-$result =  SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns);
+$result = SSP::simple( $_GET, $sql_details, $table, $primaryKey, $columns);
 
 echo json_encode($result);

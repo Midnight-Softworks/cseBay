@@ -29,6 +29,8 @@ session_start();
             <th>Name</th>
             <th>ID</th>
             <th>Starting Bid</th>
+            <th>Current Bid</th>
+            <th># of Bids</th>
             <th>End</th>
         </tr>
         </thead>
@@ -51,7 +53,8 @@ session_start();
 
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 "order": [[0, "asc"]],
-                "columnDefs": {"className": "dt-center", "targets": "_all"}
+                "columnDefs": [{"className": "dt-center", "targets": "_all",},
+                                {"targets": 1, "visible": false}]
 
             } );
             table
