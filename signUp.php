@@ -10,7 +10,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Log in to cseBay</title>
+    <title>Create an account</title>
     <style>
         input {
             margin-bottom: 0.5em;

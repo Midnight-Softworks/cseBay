@@ -5,7 +5,7 @@ session_start();
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <title>Edit game</title>
+        <title>Edit listing</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="logo.png"/>
@@ -21,8 +21,8 @@ session_start();
 
 <?php
     //This is all old code. Still needs to be updated
-if (isset($_GET['GameID'])){
-    include 'db.php';
+if (isset($_GET['listingID'])){
+    include 'login.php';
     $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$_GET['listingID'];
     $data = mysqli_query($conn, $sql);
     $description = "";
@@ -32,16 +32,28 @@ if (isset($_GET['GameID'])){
 
 
     echo "
-    <form action=\"/edit_game.php\" method='post'>
-    <input value=".$_GET['GameID']." name=\"GameID\" type=\"hidden\">
-    Game name:
-        <input type=\"text\" name=\"gamename\"  value=\"".$data[1]."\"><br>
-    Console:
-        <input type=\"text\" name=\"console\" value=\"".$data[3]."\"><br>
-    Players:
-        <input type=\"text\" name=\"players\" value=\"".$data[2]."\"><br>
-    Description:
-        <textarea name=\"description\">".$description."</textarea><br><br>
+    <form action=\"editListing.php\" method='post'>
+    Item Name:
+        <input type=\"text\" name=\"itemName\"  value=\"".$data[0]."\"><br>
+    Item Description:
+        <input type=\"textarea\" name=\"itemDescription\" value=\"".$data[1]."\"><br>
+    Starting Bid:
+        <input type=\"text\" name=\"startingBid\" value=\"".$data[2]."\"><br>
+    Buyout Price:
+        <input type=\"text\" name=\"buyoutPrice\" value=\"".$data[3]."\"><br>
+    End Date:
+        <input type=\"text\" name=\"endDate\" value=\"".$data[4]."\"><br>";
+    if ($_SESSION['type'] == 'admin') {
+        echo "
+    Creator:
+        <input type=\"text\" name=\"creator\" value=\"" . $data[5] . "\"><br> ";
+    }
+    else {
+        echo"
+        <input type=\"hidden\" name=\"creator\" value=\"" . $data[5] . "\"><br> ";
+    }
+    echo"
+        <br>
          <input type=\"submit\" value=\"Submit\">
     </form>
     ";
@@ -52,18 +64,16 @@ if (isset($_GET['GameID'])){
 
 }
 
-if (isset($_POST['GameID'])){
-    include 'db.php';
-    $file = fopen("Descriptions/".$_POST['GameID'].".txt", 'w', true);
-    fwrite($file, $_POST['description']);
-    fclose($file);
-    $sql = "UPDATE gamesdb.game SET Game_Name = \"".$_POST['gamename']."\", Players = ".$_POST['players'].", Console = \"".$_POST['console']."\" WHERE GameID = ".$_POST['GameID'];
+if (isset($_POST['listingID'])){
+    include 'login.php';
+    $sql = "UPDATE cseBay_Listings SET itemName = \"".$_POST['itemName']."\", itemDescription = \"".$_POST['itemDescription']."\", startingBid = ".$_POST['console'].", buyoutPrice = ".$_POST['buyoutPrice'].", endDate = \"".$_POST['endDate']."\", creator = \"".$_POST['creator']."\""." WHERE listingID = ".$_POST['listingID'];
+    $conn = mysqli_connect($hn, $un, $pw, $db);
     mysqli_query($conn, $sql);
     echo mysqli_error($conn);
     if(!mysqli_error($conn)){
         echo "<script>
-    alert(\"Game updated successfully\");
-   window.location = '/';
+    alert(\"Listing updated successfully\");
+   window.location = 'index.php';
 </script>";
     }
 
