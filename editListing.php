@@ -24,17 +24,18 @@ session_start();
 if (isset($_GET['listingID'])){
     include 'login.php';
     $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$_GET['listingID'];
-    $data = mysqli_query($conn, $sql);
+    $conn = mysqli_connect($hn, $un, $pw, $db);
+    $result = mysqli_query($conn, $sql);
     $description = "";
     if(!$data) echo mysqli_error($conn);
-    $data = ( mysqli_fetch_row($data));
+    $data = mysqli_fetch_row($result);
 
 
 
     echo "
     <form action=\"editListing.php\" method='post'>
     Item Name:
-        <input type=\"text\" name=\"itemName\"  value=\"".$data[0]."\"><br>
+        <input type=\"text\" name=\"itemName\"  value=\"".$data[7]."\"><br>
     Item Description:
         <input type=\"textarea\" name=\"itemDescription\" value=\"".$data[1]."\"><br>
     Starting Bid:
@@ -46,11 +47,11 @@ if (isset($_GET['listingID'])){
     if ($_SESSION['type'] == 'admin') {
         echo "
     Creator:
-        <input type=\"text\" name=\"creator\" value=\"" . $data[5] . "\"><br> ";
+        <input type=\"text\" name=\"creator\" value=\"" . $data[8] . "\"><br> ";
     }
     else {
         echo"
-        <input type=\"hidden\" name=\"creator\" value=\"" . $data[5] . "\"><br> ";
+        <input type=\"hidden\" name=\"creator\" value=\"" . $data[8] . "\"><br> ";
     }
     echo"
         <br>

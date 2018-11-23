@@ -173,7 +173,7 @@
             }
             $result = mysqli_query($conn, "SELECT password FROM cseBay_Users WHERE userName = '$this->username'");
             $row = mysqli_fetch_assoc($result);
-            if ($row['password'] != $password) echo "Password was wrong, boss: " . mysqli_error($conn);
+            if ($row['password'] != $token) echo "Password was wrong, boss: " . mysqli_error($conn);
             else return true;
             return false;
         }
