@@ -202,18 +202,22 @@
                 echo "Failed to connect to MySQL: " . mysqli_connect_error();
             }
 
-            $result = mysqli_query($conn, "SELECT currentBid FROM cseBay_Listings WHERE listingID = '$listingID'");     //getting current bid
+            $result = mysqli_query($conn, "SELECT * FROM cseBay_Listings WHERE listingID = 2");     //getting current bid
             $row = mysqli_fetch_assoc($result);
-
+            var_dump($result);
+            echo $row['currentBid'];
+            echo $listingID;
+            echo $newBidAmount;
             //This may not work. Please test and make sure the return type is null on no matches
             if ($row['currentBid'] < $newBidAmount){                                                                           //checking if current bid is higher than new Bid
-                $result = mysqli_query($conn, "UPDATE cseBay_Listing SET currentBid = '$newBidAmount' WHERE listingID = '$listingID'");         //if yes, updating new bid amount
-                $result = mysqli_query($conn, "UPDATE cseBay_Listing SET currentHighBidder = '$this->username' WHERE listingID = '$listingID'");    //if yes, updating new bidder
+                $result1 = mysqli_query($conn, "UPDATE cseBay_Listings SET currentBid = ".$newBidAmount." WHERE listingID = ".$listingID);         //if yes, updating new bid amount
+                var_dump($result1);
+                $result2 = mysqli_query($conn, "UPDATE cseBay_Listing SET currentHighBidder = \"$this->username\" WHERE listingID = $listingID");    //if yes, updating new bidder
 
-                $result = mysqli_query($conn, "SELECT numberOfBids FROM cseBay_Listings WHERE listingID = '$listingID'");       //getting number of bids
-                $row = mysqli_fetch_assoc($result);
+                $result3 = mysqli_query($conn, "SELECT numberOfBids FROM cseBay_Listings WHERE listingID = $listingID");       //getting number of bids
+                $row = mysqli_fetch_assoc($result3);
                 $newNumberOfBids = $row['numberOfBid'] + 1;                                                                            //adding  +1 to number of bids
-                $result = mysqli_query($conn, "UPDATE cseBay_Listing SET numberOfBids = $newNumberOfBids WHERE listingID = '$listingID'");      //updating number of bids
+                $result4 = mysqli_query($conn, "UPDATE cseBay_Listings SET numberOfBids = $newNumberOfBids WHERE listingID = $listingID");      //updating number of bids
                 return true;
             }
             else
