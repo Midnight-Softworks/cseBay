@@ -17,21 +17,19 @@ session_start();
 
     </head>
 <body>
-<?php include "Inventory/header.php"?>
+<?php include "header.php"?>
 
 <?php
+    //This is all old code. Still needs to be updated
 if (isset($_GET['GameID'])){
     include 'db.php';
-    $sql = "SELECT * FROM gamesdb.game WHERE GameID = ".$_GET['GameID'];
+    $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$_GET['listingID'];
     $data = mysqli_query($conn, $sql);
     $description = "";
     if(!$data) echo mysqli_error($conn);
     $data = ( mysqli_fetch_row($data));
 
-    if((@$file = fopen("Descriptions/".$data[0].".txt", 'r', true))){
-        $description = fread($file, filesize("Descriptions/".$data[0].".txt"));
-        fclose($file);
-    }
+
 
     echo "
     <form action=\"/edit_game.php\" method='post'>

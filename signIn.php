@@ -32,8 +32,15 @@ session_start();?>
             else $password = "";
 
             $newUser = new User($name);
-            if($newUser->isAdmin()) $_SESSION['type'] = "admin";
-            else $_SESSION['type'] = "user";
+            if($newUser->login($password)) {
+                if($newUser->isAdmin()) $_SESSION['type'] = "admin";
+                else $_SESSION['type'] = "user";
+                $_SESSION['username'] = $name;
+            }
+            else {
+                $credentialError = "The provided credentials are invalid.";
+            }
+
 
         }
 
@@ -44,8 +51,8 @@ session_start();?>
             $credentialError = "";
         }
         if(isset($_SESSION['type'])){
-            if($_SESSION['type'] == "user") header('Location: user_page.php');
-            if($_SESSION['type'] == "admin") header('Location: admin_page.php');
+            if($_SESSION['type'] == "user") header('Location: index.php');
+            if($_SESSION['type'] == "admin") header('Location: index.php');
         }
         ?>
         <h1>Welcome to <span style="font-style:italic; font-weight:bold; color: maroon">
@@ -65,7 +72,7 @@ session_start();?>
 
         <p style="font-style:italic">
             Placeholder for "forgot password" link<br><br>
-            Placeholder for "create account" link
+            <a href = "signUp.php">Create Account</a>
         </p>
 </html>
 <?php

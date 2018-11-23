@@ -28,6 +28,8 @@ session_start();
         <tr>
             <th>Name</th>
             <th>ID</th>
+            <th>Starting Bid</th>
+            <th>End</th>
         </tr>
         </thead>
 
@@ -55,7 +57,7 @@ session_start();
             table
                 .on( 'select', function ( e, dt, type, indexes ) {
                     var rowData = table.rows( indexes ).data().toArray();
-                    window.location = "edit_game.php?&GameID="+rowData[0][3];
+                    window.location = "editListing.php?&listingID="+rowData[0][2];
                 } );
 
 
