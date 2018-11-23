@@ -57,7 +57,7 @@ session_start();
             table
                 .on( 'select', function ( e, dt, type, indexes ) {
                     var rowData = table.rows( indexes ).data().toArray();
-                    window.location = "editListing.php?&listingID="+rowData[0][1];
+                    window.location = "viewListing.php?&listingID="+rowData[0][1];
                 } );
 
 

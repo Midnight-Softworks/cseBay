@@ -20,65 +20,23 @@
 <?php include "header.php"?>
 
 <?php
-    //This is all old code. Still needs to be updated
-    if (isset($_GET['listingID'])){
-        include 'login.php';
-        $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$_GET['listingID'];
-        $conn = mysqli_connect($hn, $un, $pw, $db);
-        $result = mysqli_query($conn, $sql);
-        $description = "";
-        if(!$data) echo mysqli_error($conn);
-        $data = mysqli_fetch_row($result);
+    include 'login.php';
+    $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$_GET['listingID'];
+    $conn = mysqli_connect($hn, $un, $pw, $db);
+    $result = mysqli_query($conn, $sql);
+    if(!$data) echo mysqli_error($conn);
+    $data = mysqli_fetch_row($result);
 
+    echo "
+    Item Name: $data[7] <br>
+    Item Description: $data[1] <br>
+    Starting Bid: $data[2] <br>
+    Buyout Price: $data[3] <br>
+    End Date: $data[4] <br>
+    Creator: $data[8] <br>";
 
+    mysqli_close($conn);
 
-        echo "
-    <form action=\"editListing.php\" method='post'>
-    Item Name:
-        <input type=\"text\" name=\"itemName\"  value=\"".$data[7]."\"><br>
-    Item Description:
-        <input type=\"textarea\" name=\"itemDescription\" value=\"".$data[1]."\"><br>
-    Starting Bid:
-        <input type=\"text\" name=\"startingBid\" value=\"".$data[2]."\"><br>
-    Buyout Price:
-        <input type=\"text\" name=\"buyoutPrice\" value=\"".$data[3]."\"><br>
-    End Date:
-        <input type=\"text\" name=\"endDate\" value=\"".$data[4]."\"><br>";
-        if ($_SESSION['type'] == 'admin') {
-            echo "
-    Creator:
-        <input type=\"text\" name=\"creator\" value=\"" . $data[8] . "\"><br> ";
-        }
-        else {
-            echo"
-        <input type=\"hidden\" name=\"creator\" value=\"" . $data[8] . "\"><br> ";
-        }
-        echo"
-        <br>
-         <input type=\"submit\" value=\"Submit\">
-    </form>
-    ";
-
-
-        mysqli_close($conn);
-
-
-    }
-
-    if (isset($_POST['listingID'])){
-        include 'login.php';
-        $sql = "UPDATE cseBay_Listings SET itemName = \"".$_POST['itemName']."\", itemDescription = \"".$_POST['itemDescription']."\", startingBid = ".$_POST['console'].", buyoutPrice = ".$_POST['buyoutPrice'].", endDate = \"".$_POST['endDate']."\", creator = \"".$_POST['creator']."\""." WHERE listingID = ".$_POST['listingID'];
-        $conn = mysqli_connect($hn, $un, $pw, $db);
-        mysqli_query($conn, $sql);
-        echo mysqli_error($conn);
-        if(!mysqli_error($conn)){
-            echo "<script>
-    alert(\"Listing updated successfully\");
-   window.location = 'index.php';
-</script>";
-        }
-
-    }
-
+    if ($_SESSION['username'] == $data[8] || $_SESSION['type'] == 'admin') echo "<a href=\"http://pluto.cse.msstate.edu/~sfs111/cseBay/editListing.php?&listingID=".$_GET['listingID']."\">Edit this listing</a>";
 ?>
 </body>
