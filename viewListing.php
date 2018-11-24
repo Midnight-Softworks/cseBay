@@ -38,6 +38,7 @@
     Item Name: $data[7] <br>
     Item Description: $data[1] <br>
     Starting Bid: $data[2] <br>
+    Current Bid:  $data[9] <br>
     Buyout Price: $data[3] <br>
     End Date: $data[4] <br>
     Creator: $data[8] <br>";
