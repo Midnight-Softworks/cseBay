@@ -20,7 +20,6 @@
         function isAdmin()
         {
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -30,6 +29,7 @@
 
             $result = mysqli_query($conn, "SELECT isAdmin FROM cseBay_Users WHERE userName = " . '"' . "$this->username" . '"');
             $row = mysqli_fetch_assoc($result);
+            mysqli_close($conn);
             if ($row['isAdmin'] == true) return true;
             return false;
         }
@@ -37,7 +37,6 @@
         function passwordNeedsReset()
         {
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -47,6 +46,7 @@
 
             $result = mysqli_query($conn, "SELECT passwordIsSet FROM cseBay_Users WHERE userName = " . '"' . "$this->username" . '"');
             $row = mysqli_fetch_assoc($result);
+            mysqli_close($conn);
             if ($row['passwordIsSet'] == false) return true;
             return false;
         }
@@ -54,7 +54,6 @@
         function isUserAvailable()
         {
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -64,7 +63,7 @@
 
             $result = mysqli_query($conn, "SELECT userName FROM cseBay_Users WHERE userName = " . '"' . "$this->username" . '"');
             $row = mysqli_fetch_assoc($result);
-            //This may not work. Please test and make sure the return type is null on no matches
+            mysqli_close($conn);
             if ($row['username'] != $this->username) return true;
             return false;
         }
@@ -76,7 +75,6 @@
             $token = hash('ripemd256', "$salt1$password$salt2");
             if ($this->isUserAvailable()) {
                 include 'login.php';
-                global $hn, $pw, $un, $db;
                 $conn = mysqli_connect($hn, $un, $pw, $db);
 
                 //Got an error? Scream it out
@@ -85,10 +83,16 @@
                 }
 
                 $result = mysqli_query($conn, "INSERT INTO cseBay_Users (userName, password) VALUES('$this->username', '$token') ");
-                if (!$result) echo "Something went wrong, boss: " . mysqli_error($conn);
-                else return true;
+                if (!$result){
+                    echo "Something went wrong, boss: " . mysqli_error($conn);
+                    mysqli_close($conn);
+                    return false;
+                }
+                else {
+                    mysqli_close($conn);
+                    return true;
+                }
 
-                return false;
             } else return false;
         }
 
@@ -97,7 +101,6 @@
         {
             if (!checkEmail($email)) return false;
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -106,7 +109,11 @@
             }
 
             $result = mysqli_query($conn, "UPDATE cseBay_Users SET email = '$email' WHERE userName = '$this->username'");
-            if (!$result) return false;
+            if (!$result){
+                mysqli_close($conn);
+                return false;
+            }
+            mysqli_close($conn);
             return true;
         }
 
@@ -116,7 +123,6 @@
             if (!preg_match($emailRegEx, $email)) return false;
 
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -126,6 +132,7 @@
 
             $result = mysqli_query($conn, "SELECT email FROM cseBay_Users WHERE email = " . '"' . "$email" . '"');
             $row = mysqli_fetch_assoc($result);
+            mysqli_close($conn);
 
             //This may not work. Please test and make sure the return type is null on no matches
             if ($row['email'] != $email) return true;
@@ -140,7 +147,6 @@
             $token = hash('ripemd256', "$salt1$password$salt2");
 
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -149,8 +155,14 @@
             }
 
             $result = mysqli_query($conn, "UPDATE cseBay_Users SET password = '$token' WHERE userName = '$this->username'");
-            if (!$result) echo "Something went wrong, boss: " . mysqli_error($conn);
-            else return true;
+            if (!$result){
+                echo "Something went wrong, boss: " . mysqli_error($conn);
+                mysqli_close($conn);
+            }
+            else {
+                mysqli_close($conn);
+                return true;
+            }
 
             return false;
         }
@@ -165,7 +177,6 @@
             $salt2 = "7898uhakjhhv^!%@*HHO&*H&*";
             $token = hash('ripemd256', "$salt1$password$salt2");
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
             //Got an error? Scream it out
             if (mysqli_connect_errno()) {
@@ -173,6 +184,7 @@
             }
             $result = mysqli_query($conn, "SELECT password FROM cseBay_Users WHERE userName = '$this->username'");
             $row = mysqli_fetch_assoc($result);
+            mysqli_close($conn);
             if ($row['password'] != $token) echo "Password was wrong, boss: " . mysqli_error($conn);
             else return true;
             return false;
@@ -194,34 +206,25 @@
         function bid($listingID, $newBidAmount)
         {
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
             if (mysqli_connect_errno()) {
                 echo "Failed to connect to MySQL: " . mysqli_connect_error();
             }
+            $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$listingID;
+            $result = mysqli_query($conn, $sql);
+            $listing = mysqli_fetch_assoc($result);
 
-            $result = mysqli_query($conn, "SELECT * FROM cseBay_Listings WHERE listingID = 2");     //getting current bid
-            $row = mysqli_fetch_assoc($result);
-            var_dump($result);
-            echo $row['currentBid'];
-            echo $listingID;
-            echo $newBidAmount;
-            //This may not work. Please test and make sure the return type is null on no matches
-            if ($row['currentBid'] < $newBidAmount){                                                                           //checking if current bid is higher than new Bid
-                $result1 = mysqli_query($conn, "UPDATE cseBay_Listings SET currentBid = ".$newBidAmount." WHERE listingID = ".$listingID);         //if yes, updating new bid amount
-                var_dump($result1);
-                $result2 = mysqli_query($conn, "UPDATE cseBay_Listing SET currentHighBidder = \"$this->username\" WHERE listingID = $listingID");    //if yes, updating new bidder
-
-                $result3 = mysqli_query($conn, "SELECT numberOfBids FROM cseBay_Listings WHERE listingID = $listingID");       //getting number of bids
-                $row = mysqli_fetch_assoc($result3);
-                $newNumberOfBids = $row['numberOfBid'] + 1;                                                                            //adding  +1 to number of bids
-                $result4 = mysqli_query($conn, "UPDATE cseBay_Listings SET numberOfBids = $newNumberOfBids WHERE listingID = $listingID");      //updating number of bids
+            if ($listing['currentBid'] < $newBidAmount){
+                $newNumberOfBids = $listing['numberOfBids'] + 1;
+                $result = mysqli_query($conn, "UPDATE cseBay_Listings SET currentBid = ".$newBidAmount.", numberOfBids = ".$newNumberOfBids.", currentHighBidder = '".$this->username."' WHERE listingID = ".$listingID);
+                mysqli_close($conn);
                 return true;
             }
             else
             {
+                mysqli_close($conn);
                 return false;
             }
         }

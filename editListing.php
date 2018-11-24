@@ -44,7 +44,7 @@ if (isset($_SESSION['username'])) {
     Buyout Price:
         <input type=\"text\" name=\"buyoutPrice\" value=\"" . $data[3] . "\"><br>
     End Date:
-        <input type=\"text\" name=\"endDate\" value=\"" . $data[4] . "\"><br>";
+        <input type=\"datetime-local\" name=\"endDate\" value=\"" . $data[4] . "\"><br>";
             if ($_SESSION['type'] == 'admin') {
                 echo "
     Creator:
@@ -67,7 +67,7 @@ if (isset($_SESSION['username'])) {
 
     if (isset($_POST['listingID'])) {
         include 'login.php';
-        $sql = "UPDATE cseBay_Listings SET itemName = \"" . $_POST['itemName'] . "\", itemDescription = \"" . $_POST['itemDescription'] . "\", startingBid = " . $_POST['console'] . ", buyoutPrice = " . $_POST['buyoutPrice'] . ", endDate = \"" . $_POST['endDate'] . "\", creator = \"" . $_POST['creator'] . "\"" . " WHERE listingID = " . $_POST['listingID'];
+        $sql = "UPDATE cseBay_Listings SET itemName = \"" . $_POST['itemName'] . "\", itemDescription = \"" . $_POST['itemDescription'] . "\", startingBid = " . $_POST['startingBid'] . ", buyoutPrice = " . $_POST['buyoutPrice'] . ", endDate = \"" . $_POST['endDate'] . "\", creator = \"" . $_POST['creator'] . "\"" . " WHERE listingID = " . $_POST['listingID'];
         $conn = mysqli_connect($hn, $un, $pw, $db);
         mysqli_query($conn, $sql);
         echo mysqli_error($conn);
