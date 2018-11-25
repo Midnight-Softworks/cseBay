@@ -25,7 +25,6 @@ session_start();?>
         //If submit is not set, the form hasn't been filled yet. Default to empty fields and no errors
         if (isset($_POST['submit'])){
 
-
             //For the following, set the entered values if they exist. Otherwise, default to blank
             if (isset($_POST['username']))$name = $_POST['username'];
             else $name = "";
@@ -33,8 +32,14 @@ session_start();?>
             else $password = "";
 
             $newUser = new User($name);
-            $newUser->isAdmin();
-
+            if($newUser->login($password)) {
+                if($newUser->isAdmin()) $_SESSION['type'] = "admin";
+                else $_SESSION['type'] = "user";
+                $_SESSION['username'] = $name;
+            }
+            else {
+                $credentialError = "The provided credentials are invalid.";
+            }
 
 
         }
@@ -43,12 +48,11 @@ session_start();?>
         else{
             $name = "";
             $password = "";
-
             $credentialError = "";
         }
         if(isset($_SESSION['type'])){
-            if($_SESSION['type'] == "user") header('Location: user_page.php');
-            if($_SESSION['type'] == "admin") header('Location: admin_page.php');
+            if($_SESSION['type'] == "user") header('Location: index.php');
+            if($_SESSION['type'] == "admin") header('Location: index.php');
         }
         ?>
         <h1>Welcome to <span style="font-style:italic; font-weight:bold; color: maroon">
@@ -68,7 +72,7 @@ session_start();?>
 
         <p style="font-style:italic">
             Placeholder for "forgot password" link<br><br>
-            Placeholder for "create account" link
+            <a href = "signUp.php">Create Account</a>
         </p>
 </html>
 <?php
