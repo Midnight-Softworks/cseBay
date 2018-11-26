@@ -56,7 +56,7 @@
         if($_SESSION['type'] == "admin") header('Location: index.php');
     }
 ?>
-<h1>Welcome to <span style="font-style:italic; font-weight:bold; color: maroon">
+<h1>Welcome to <span style="font-style:italic; font-weight:bold; color: #2B7A78">
                 cseBay</span>!</h1>
 
 <p style="color: red">
@@ -73,7 +73,6 @@
 
 <p style="font-style:italic">
     Placeholder for "forgot password" link<br><br>
-    Placeholder for "create account" link
 </p>
 </html>
 <?php

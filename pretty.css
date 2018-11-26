@@ -1,0 +1,17 @@
+body{
+    color: #4F4A41;
+    font-family: "Lucida console";
+    background-color: #F0EBF4;
+
+}
+
+table, td{
+    color: #4F4A41;
+    font-family: "Lucida Console";
+}
+
+th{
+    color:#4F4A41;
+    font-family: "Lucida Console";
+    font-weight: bold;
+}

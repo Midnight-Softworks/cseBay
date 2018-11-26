@@ -8,6 +8,9 @@
 session_start();?>
 <!DOCTYPE html>
 <html>
+
+
+
     <head>
         <meta charset="UTF-8">
         <title>Log in to cseBay</title>
@@ -15,6 +18,7 @@ session_start();?>
             input {
                 margin-bottom: 0.5em;
             }
+
         </style>
     </head>
     <body>
@@ -55,8 +59,8 @@ session_start();?>
             if($_SESSION['type'] == "admin") header('Location: index.php');
         }
         ?>
-        <h1>Welcome to <span style="font-style:italic; font-weight:bold; color: maroon">
-                cseBay</span>!</h1>
+        <h1 style = "align-content: center">Welcome to <span style="font-style:italic; font-weight:bold; color: #2B7A78">
+                cseBay</span>! </h1>
 
         <p style="color: red">
         <?php echo $credentialError; ?>
