@@ -45,7 +45,7 @@
     mysqli_close($conn);
 
     if ($_SESSION['username'] == $data[8] || $_SESSION['type'] == 'admin') echo "<a href=\"http://pluto.cse.msstate.edu/~sfs111/cseBay/editListing.php?&listingID=".$_GET['listingID']."\">Edit this listing</a>";
-    else if (isset($_SESSION['username'])){
+    if ($_SESSION['username'] != $data[8]){
         echo "
     <form action=\"viewListing.php\" method='get'>
     Bid amount:
