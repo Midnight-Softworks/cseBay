@@ -23,9 +23,8 @@
     include 'User.php';
     if (isset($_GET['bid']) && isset($_GET['listingID'])){
         $biddingUser = new User($_SESSION['username']);
-        if ($biddingUser->bid($_GET['listingID'], $_GET['bid'])) echo "<script>alert('Bid placed successfully');</script>";
+        if ($biddingUser->bid($_GET['listingID'], $_GET['bid'])) echo "<script>alert('Bid placed successfully'); window.location = 'index.php';</script>";
         else echo "<script>alert('Please bid more than the current bid');</script>";
-        header("index.php");
     }
     include 'login.php';
     $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$_GET['listingID'];
