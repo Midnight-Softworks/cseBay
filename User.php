@@ -83,12 +83,11 @@
                 }
 
                 $result = mysqli_query($conn, "INSERT INTO cseBay_Users (userName, password) VALUES('$this->username', '$token') ");
-                if (!$result){
+                if (!$result) {
                     echo "Something went wrong, boss: " . mysqli_error($conn);
                     mysqli_close($conn);
                     return false;
-                }
-                else {
+                } else {
                     mysqli_close($conn);
                     return true;
                 }
@@ -109,7 +108,7 @@
             }
 
             $result = mysqli_query($conn, "UPDATE cseBay_Users SET email = '$email' WHERE userName = '$this->username'");
-            if (!$result){
+            if (!$result) {
                 mysqli_close($conn);
                 return false;
             }
@@ -155,11 +154,10 @@
             }
 
             $result = mysqli_query($conn, "UPDATE cseBay_Users SET password = '$token' WHERE userName = '$this->username'");
-            if (!$result){
+            if (!$result) {
                 echo "Something went wrong, boss: " . mysqli_error($conn);
                 mysqli_close($conn);
-            }
-            else {
+            } else {
                 mysqli_close($conn);
                 return true;
             }
@@ -169,7 +167,6 @@
 
         //Can we sit down and discuss our design doc? Classes should be nouns, not verbs.
         //A lot of these "classes" should be functions in this class.
-
 
         function login($password)
         {
@@ -189,10 +186,11 @@
             else return true;
             return false;
         }
+
         function setSession()
         {
             session_start();
-            if(isset($_SESSION["type"])) {
+            if (isset($_SESSION["type"])) {
                 if ($_SESSION["type"] == "admin") {
                     header('Location: admin_page.php');
                     exit();
@@ -212,19 +210,89 @@
             if (mysqli_connect_errno()) {
                 echo "Failed to connect to MySQL: " . mysqli_connect_error();
             }
-            $sql = "SELECT * FROM cseBay_Listings WHERE listingID = ".$listingID;
+            $sql = "SELECT * FROM cseBay_Listings WHERE listingID = " . $listingID;
             $result = mysqli_query($conn, $sql);
             $listing = mysqli_fetch_assoc($result);
 
-            if ($listing['currentBid'] < $newBidAmount){
+            if ($listing['currentBid'] < $newBidAmount) {
                 $newNumberOfBids = $listing['numberOfBids'] + 1;
-                $result = mysqli_query($conn, "UPDATE cseBay_Listings SET currentBid = ".$newBidAmount.", numberOfBids = ".$newNumberOfBids.", currentHighBidder = '".$this->username."' WHERE listingID = ".$listingID);
+                $result = mysqli_query($conn, "UPDATE cseBay_Listings SET currentBid = " . $newBidAmount . ", numberOfBids = " . $newNumberOfBids . ", currentHighBidder = '" . $this->username . "' WHERE listingID = " . $listingID);
+                mysqli_close($conn);
+                return true;
+            } else {
+                mysqli_close($conn);
+                return false;
+            }
+        }
+
+        function forceDeleteUser($username)
+        {
+            include 'login.php';
+            global $hn, $pw, $un, $db;
+            $conn = mysqli_connect($hn, $un, $pw, $db);
+
+            //Got an error? Scream it out
+            if (mysqli_connect_errno()) {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+            if ($this->isAdmin()) {
+                $result = mysqli_query($conn, "DELETE '*' FROM cseBay_Users WHERE userName = '$username'");     //deleting user
                 mysqli_close($conn);
                 return true;
             }
-            else
-            {
-                mysqli_close($conn);
+            mysqli_close($conn);
+            return false;
+        }
+
+        function makeAdmin($username)
+        {
+            include 'login.php';
+            global $hn, $pw, $un, $db;
+            $conn = mysqli_connect($hn, $un, $pw, $db);
+
+            //Got an error? Scream it out
+            if (mysqli_connect_errno()) {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+            if ($this->isAdmin()) {
+                $result = mysqli_query($conn, "UPDATE cseBay_Users SET isAdmin = 1 WHERE username = '$username'");
+                return true;
+            }
+            return false;
+        }
+
+        function removeAdmin($username)
+        {
+            include 'login.php';
+            global $hn, $pw, $un, $db;
+            $conn = mysqli_connect($hn, $un, $pw, $db);
+
+            //Got an error? Scream it out
+            if (mysqli_connect_errno()) {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+            if ($this->isAdmin()) {
+                $result = mysqli_query($conn, "UPDATE cseBay_Users SET isAdmin = 0 WHERE username = '$username'");
+                return true;
+            }
+            return false;
+        }
+
+        function forceDeleteList($listingID)
+        {
+            include 'login.php';
+            global $hn, $pw, $un, $db;
+            $conn = mysqli_connect($hn, $un, $pw, $db);
+
+            //Got an error? Scream it out
+            if (mysqli_connect_errno()) {
+                echo "Failed to connect to MySQL: " . mysqli_connect_error();
+            }
+
+            if ($this->isAdmin()) {
+                $result = mysqli_query($conn, "DELETE '*' FROM cseBay_Users WHERE userName = '$listingID'");     //deleting user
+                return true;
+            } else {
                 return false;
             }
         }
