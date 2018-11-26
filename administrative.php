@@ -28,28 +28,32 @@ session_start();
 
 <?php
 include 'login.php';
-include  'user.php';
-if ((isset($_POST['deleteUserName']))||(isset($_POST['deleteListing']))||(isset($_POST['makeAdmin']))||(isset($_POST['removeAdmin']))){
+include  'User.php';
+if (isset($_POST['submit'])){
 
     $thisUser = new User($_SESSION['username']);
-    if ($thisUser->forceDeleteUser($_GET['deleteUserName']))
-    {
+    if (isset($_POST['deleteUserName']) && $_POST['deleteUserName'] != "") {
+        if ($thisUser->forceDeleteUser($_POST['deleteUserName'])) {
             echo "User successfully removed";
+        }
     }
 
-    if ($thisUser->forceDeleteList($_GET['deleteListing']))
-    {
-        echo "Listing successfully removed";
+    if (isset($_POST['deleteListing']) && $_POST['deleteListing'] != "") {
+        if ($thisUser->forceDeleteList($_POST['deleteListing'])) {
+            echo "Listing successfully removed";
+        }
     }
 
-    if ($thisUser->makeAdmin($_GET['makeAdmin']))
-    {
-        echo "User successfully promoted to Admin";
+    if (isset($_POST['makeAdmin']) && $_POST['makeAdmin']) {
+        if ($thisUser->makeAdmin($_POST['makeAdmin'])) {
+            echo "User successfully promoted to Admin";
+        }
     }
 
-    if ($thisUser->removeAdmin($_GET['removeAdmin']))
-    {
-        echo "User successfully removed form Admin";
+    if (isset($_POST['removeAdmin']) && $_POST['removeAdmin']) {
+        if ($thisUser->removeAdmin($_POST['removeAdmin'])) {
+            echo "User successfully removed form Admin";
+        }
     }
 
 
@@ -66,7 +70,7 @@ if ((isset($_POST['deleteUserName']))||(isset($_POST['deleteListing']))||(isset(
 
     echo"
         <br>
-         <input type=\"submit\" value=\"Submit\">
+         <input type=\"submit\" name = \"submit\" value=\"Submit\">
     </form>
     ";
    // $_POST = array();
@@ -86,7 +90,7 @@ else{
 
     echo "
     <br>
-         <input type=\"submit\" value=\"Submit\">
+         <input type=\"submit\" name = \"submit\" value=\"Submit\">
     </form>
     ";
 }

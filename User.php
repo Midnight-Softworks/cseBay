@@ -228,7 +228,6 @@
         function forceDeleteUser($username)
         {
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -236,7 +235,8 @@
                 echo "Failed to connect to MySQL: " . mysqli_connect_error();
             }
             if ($this->isAdmin()) {
-                $result = mysqli_query($conn, "DELETE '*' FROM cseBay_Users WHERE userName = '$username'");     //deleting user
+                $sql = "DELETE FROM cseBay_Users WHERE userName = \"".$username."\"";
+                $result = mysqli_query($conn, $sql);     //deleting user
                 mysqli_close($conn);
                 return true;
             }
@@ -247,7 +247,6 @@
         function makeAdmin($username)
         {
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -264,7 +263,6 @@
         function removeAdmin($username)
         {
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -281,7 +279,6 @@
         function forceDeleteList($listingID)
         {
             include 'login.php';
-            global $hn, $pw, $un, $db;
             $conn = mysqli_connect($hn, $un, $pw, $db);
 
             //Got an error? Scream it out
@@ -290,7 +287,7 @@
             }
 
             if ($this->isAdmin()) {
-                $result = mysqli_query($conn, "DELETE '*' FROM cseBay_Users WHERE userName = '$listingID'");     //deleting user
+                $result = mysqli_query($conn, "DELETE * FROM cseBay_Users WHERE listingID = $listingID");     //deleting user
                 return true;
             } else {
                 return false;
