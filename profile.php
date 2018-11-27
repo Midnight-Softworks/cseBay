@@ -39,7 +39,9 @@ session_start();
     $result = mysqli_query($conn, $sql);
     if(!$result) echo mysqli_error($conn);
 
-    echo "<table>
+    echo "
+<p>Your currently running auctions:</p>
+<table>
     <tr>
         <th><b>Listing ID</b></th>
         <th><b>Listing Name</b></th>
